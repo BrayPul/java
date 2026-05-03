@@ -1,0 +1,81 @@
+
+import java.util.Scanner;
+import java.io.FileReader;
+import java.io.PrintWriter;
+ 
+public class LibrarySystem {
+ 
+    
+    static String[]  bookID    = new String[100];
+    static String[]  title     = new String[100];
+    static String[]  author    = new String[100];
+    static boolean[] available = new boolean[100];
+    static int bookCount = 0;
+ 
+    // ---------- Loan fields ----------
+    static String[] loanID   = new String[100];
+    static String[] loanBook = new String[100];
+    static String[] member   = new String[100];
+    static String[] loanDate = new String[100];
+    static int loanCount = 0;
+ 
+    static Scanner input = new Scanner(System.in);
+ 
+    
+    public static void main(String[] args) throws Exception {
+ 
+        loadBooks();
+        loadLoans();
+ 
+        int choice;
+ 
+        do {
+            System.out.println("\n====== Library Management System ======");
+            System.out.println("1. Add a Book");
+            System.out.println("2. Remove a Book");
+            System.out.println("3. Display All Books");
+            System.out.println("4. Checkout a Book");
+            System.out.println("5. Return a Book");
+            System.out.println("6. View All Loans");
+            System.out.println("7. Exit");
+            System.out.print("Enter choice: ");
+            choice = Integer.parseInt(input.nextLine().trim());
+ 
+            if      (choice == 1) addBook();
+            else if (choice == 2) removeBook();
+            else if (choice == 3) displayBooks();
+            else if (choice == 4) checkoutBook();
+            else if (choice == 5) returnBook();
+            else if (choice == 6) viewLoans();
+            else if (choice == 7) System.out.println("Goodbye!");
+            else                  System.out.println("Invalid choice.");
+ 
+        } while (choice != 7);
+    }
+ 
+   
+    static void addBook() throws Exception {
+        System.out.print("Enter Book ID: ");
+        String id = input.nextLine().trim();
+ 
+        for (int i = 0; i < bookCount; i++) {
+            if (bookID[i].equalsIgnoreCase(id)) {
+                System.out.println("That ID already exists.");
+                return;
+            }
+        }
+ 
+        System.out.print("Enter Title: ");
+        String t = input.nextLine().trim();
+        System.out.print("Enter Author: ");
+        String a = input.nextLine().trim();
+ 
+        bookID[bookCount]    = id;
+        title[bookCount]     = t;
+        author[bookCount]    = a;
+        available[bookCount] = true;
+        bookCount++;
+ 
+        saveBooks();
+        System.out.println("Book added!");
+    }
