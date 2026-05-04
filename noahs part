@@ -1,0 +1,75 @@
+ static void viewLoans() {
+        if (loanCount == 0) { System.out.println("No active loans."); return; }
+        System.out.println("\n--- Active Loans ---");
+        for (int i = 0; i < loanCount; i++) {
+            System.out.println((i+1) + ". " + loanID[i] +
+                " | Book: " + loanBook[i] +
+                " | Member: " + member[i] +
+                " | Date: " + loanDate[i]);
+        }
+    }
+
+    static int findBook(String id) {
+        for (int i = 0; i < bookCount; i++)
+            if (bookID[i].equalsIgnoreCase(id)) return i;
+        return -1;
+    }
+
+    static int findLoan(String id) {
+        for (int i = 0; i < loanCount; i++)
+            if (loanID[i].equalsIgnoreCase(id)) return i;
+        return -1;
+    }
+
+    static void saveBooks() throws Exception {
+        PrintWriter out = new PrintWriter("books.txt");
+        for (int i = 0; i < bookCount; i++)
+            out.println(bookID[i] + "," + title[i] + "," + author[i] + "," + available[i]);
+        out.close();
+    }
+
+    static void loadBooks() throws Exception {
+        try {
+            Scanner in = new Scanner(new FileReader("books.txt"));
+            while (in.hasNextLine()) {
+                String line = in.nextLine().trim();
+                if (line.length() == 0) continue;
+                int c1 = line.indexOf(",");
+                int c2 = line.indexOf(",", c1 + 1);
+                int c3 = line.indexOf(",", c2 + 1);
+                bookID[bookCount]    = line.substring(0, c1);
+                title[bookCount]     = line.substring(c1+1, c2);
+                author[bookCount]    = line.substring(c2+1, c3);
+                available[bookCount] = line.substring(c3+1).equals("true");
+                bookCount++;
+            }
+            in.close();
+        } catch (Exception e) {}
+    }
+
+    static void saveLoans() throws Exception {
+        PrintWriter out = new PrintWriter("loans.txt");
+        for (int i = 0; i < loanCount; i++)
+            out.println(loanID[i] + "," + loanBook[i] + "," + member[i] + "," + loanDate[i]);
+        out.close();
+    }
+
+    static void loadLoans() throws Exception {
+        try {
+            Scanner in = new Scanner(new FileReader("loans.txt"));
+            while (in.hasNextLine()) {
+                String line = in.nextLine().trim();
+                if (line.length() == 0) continue;
+                int c1 = line.indexOf(",");
+                int c2 = line.indexOf(",", c1 + 1);
+                int c3 = line.indexOf(",", c2 + 1);
+                loanID[loanCount]   = line.substring(0, c1);
+                loanBook[loanCount] = line.substring(c1+1, c2);
+                member[loanCount]   = line.substring(c2+1, c3);
+                loanDate[loanCount] = line.substring(c3+1);
+                loanCount++;
+            }
+            in.close();
+        } catch (Exception e) {}
+    }
+}
