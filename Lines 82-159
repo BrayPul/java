@@ -1,0 +1,77 @@
+    if (i == -1) {
+            System.out.println("Book not found.");
+        } else if (!available[i]) {
+            System.out.println("Cannot remove — book is checked out.");
+        } else {
+            for (int j = i; j < bookCount - 1; j++) {
+                bookID[j]    = bookID[j+1];
+                title[j]     = title[j+1];
+                author[j]    = author[j+1];
+                available[j] = available[j+1];
+            }
+            bookCount--;
+            saveBooks();
+            System.out.println("Book removed.");
+        }
+    }
+
+    static void displayBooks() {
+        if (bookCount == 0) { System.out.println("No books found."); return; }
+        System.out.println("\n--- All Books ---");
+        for (int i = 0; i < bookCount; i++) {
+            String status = available[i] ? "Available" : "Checked Out";
+            System.out.println((i+1) + ". ID: " + bookID[i] +
+                " | " + title[i] + " by " + author[i] + " | " + status);
+        }
+    }
+
+    static void checkoutBook() throws Exception {
+        System.out.print("Enter Book ID to checkout: ");
+        String id = input.nextLine().trim();
+        int i = findBook(id);
+
+        if (i == -1) {
+            System.out.println("Book not found.");
+        } else if (!available[i]) {
+            System.out.println("Book is already checked out.");
+        } else {
+            System.out.print("Enter Member Name: ");
+            String name = input.nextLine().trim();
+            System.out.print("Enter Date (MM/DD/YYYY): ");
+            String date = input.nextLine().trim();
+
+            loanID[loanCount]   = "L" + (loanCount + 1);
+            loanBook[loanCount] = id;
+            member[loanCount]   = name;
+            loanDate[loanCount] = date;
+            loanCount++;
+            available[i] = false;
+
+            saveBooks();
+            saveLoans();
+            System.out.println("Checked out! Loan ID: L" + loanCount);
+        }
+    }
+
+    static void returnBook() throws Exception {
+        System.out.print("Enter Loan ID to return (e.g. L1): ");
+        int i = findLoan(input.nextLine().trim());
+
+        if (i == -1) {
+            System.out.println("Loan not found.");
+        } else {
+            int b = findBook(loanBook[i]);
+            if (b != -1) available[b] = true;
+
+            for (int j = i; j < loanCount - 1; j++) {
+                loanID[j]   = loanID[j+1];
+                loanBook[j] = loanBook[j+1];
+                member[j]   = member[j+1];
+                loanDate[j] = loanDate[j+1];
+            }
+            loanCount--;
+            saveBooks();
+            saveLoans();
+            System.out.println("Book returned successfully.");
+        }
+    }
